@@ -70,6 +70,21 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>IranianSans.ttf</string>
+		<string>IRANSansMobile(FaNum)_Medium.ttf</string>
+		<string>IRANYekanMobileBlack.ttf</string>
+		<string>IRANYekanMobileBold.ttf</string>
+		<string>IRANYekanMobileExtraBlack.ttf</string>
+		<string>IRANYekanMobileExtraBold.ttf</string>
+		<string>IRANYekanMobileFN Bold.ttf</string>
+		<string>IRANYekanMobileLight.ttf</string>
+		<string>IRANYekanMobileMedium.ttf</string>
+		<string>IRANYekanMobileRegular.ttf</string>
+		<string>IRANYekanMobileThin.ttf</string>
+		<string>Fontisto.ttf</string>
+		<string>Roboto_medium.ttf</string>
+		<string>Roboto.ttf</string>
+		<string>rubicon-icon-font.ttf</string>
 	</array>
 </dict>
 </plist>
