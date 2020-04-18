@@ -8,7 +8,8 @@ const { Types, Creators } = createActions({
   getRequest: ['getAddress'],
   postRequest: ['postAddress' , 'data'],
   getSuccess: ['data'],
-  getFailure: null
+  getFailure: null,
+  refreshPage:['getAddress']
 })
 
 export const ClassinoTypes = Types
@@ -53,11 +54,13 @@ export const success = (state, action ) => {
                        dates : Object.assign({}, state.dates, {[info.getAddress] : Date.now()})
                     })
 }
-
 // failed to get the avatar
 export const failure = (state) =>
   state.merge({ fetching: false, error: true, getAddress: null, data: null })
-
+//need to refresh another screem
+export const refreshPage = (state, getAddress) => {
+  return state;
+}
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -65,5 +68,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_REQUEST]: requestGet,
   [Types.POST_REQUEST]: requestPost,
   [Types.GET_SUCCESS]: success,
-  [Types.GET_FAILURE]: failure
+  [Types.GET_FAILURE]: failure,
+  [Types.REFRESH_PAGE] : refreshPage
 })

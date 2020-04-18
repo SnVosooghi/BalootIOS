@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { ActivityIndicator, View , Text, Image, Dimensions, StyleSheet, TouchableOpacity, FlatList, ScrollView, findNodeHandle} from "react-native";
 import { Container, Content } from "native-base";
-import { Card, ListItem, Button, Icon,CheckBox } from 'react-native-elements';
+import { Card, ListItem, Button, Icon } from 'react-native-elements';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import Orientation from 'react-native-orientation-locker';
 import { BlurView } from "@react-native-community/blur";
 import PickerBox from 'react-native-picker-box';
+import update from 'react-addons-update';
 
 //local imports
 import GlobalScreen from './../../Components/GlobalScreen'
@@ -19,63 +20,28 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 const screenUrl='products/list';
 const filterUrl='products/listFilters';
+const postValues=[
+  "course_id","lesson_id","grade_id"
+]
 
 
 class Courses extends Component {
   constructor(props){
     super(props)
     this.state={
-      filterResponse:'',
-      courseResponse:'',
-      loading1:true,
-      loading2:true,
-      loading:true,
-      checkbox1:[true],
-      checkbox2:[false],
-      checkbox3:[false],
-      filter1:false,
-      filter2:false,
-      filter3:false,
-      filterData:{
-        coursesID:[],
-        lessonsID:[],
-        gradesID:[],
-      },
-      goToCourseCounter:0,
-      buyCount:0,
-      textInputValue: '',
-      data: [
-      {label: 'Português', value: 'pt'},
-      {label: 'Deutsch', value: 'de'},
-      {label: 'English', value: 'en'},
-      {label: '1', value: '11'},
-      {label: '2', value: '22'},
-      {label: '3', value: '33'},
-      ],
       selectedValue1: '',
       selectedValue2: '',
       selectedValue3: '',
-      selectedTextValue1:'',
-      selectedTextValue2:'',
-      selectedTextValue3:'',
-      fakedata:[ { key: '0', value: '10', label: 'ریاضی' },
-        { key: '1', value: '11', label: 'فیزیک' },
-        { key: '2', value: '13', label: 'شیمی' }],
+      selectedValues: ['', '', ''],
       buttonLoad:[],
-      viewRef: null
-      }
-    this.myRef = React.createRef();
+    }
     this.getCourses();
     this.getData();
   }
   componentDidMount(){
     Orientation.lockToPortrait();
   }
-  componentWillUnmount() {
-
-
-  }
-  async getCourses(){
+  getCourses(){
     const filterList={"course_id":this.state.selectedValue3,
     "lesson_id":this.state.selectedValue1,
     "grade_id":this.state.selectedValue2};
@@ -113,7 +79,8 @@ class Courses extends Component {
         }
       })*/}
   }
-  getCourses1(value,searchBar,filterID){
+
+  setFilter(value,searchBar,filterID){
     selected=0;
     for(let i=0;i<searchBar.length;i++){
       if(searchBar[i].label==value){
@@ -122,7 +89,6 @@ class Courses extends Component {
     }
     if(filterID==1){
       this.state.selectedValue1=selected;
-      console.log(this.state.selectedValue1);
     }
     if(filterID==2){
       this.state.selectedValue2=selected;
@@ -132,38 +98,18 @@ class Courses extends Component {
     }
     this.getCourses();
   }
-  async getData(){
+  getData(){
     this.props.getFiletrs(filterUrl);
-    {/*axios.get('https://clone.classino.com/api/products/listFilters',
-        {headers:{Accept:'application/json',Authorization:this.props.token,Release:'3',OS:'android'}}
-    ).then(result=>{
-      if(result.data.middleware!=null){
-        this.props.setMiddleware(result.data,this.props.navigation);
-        this.props.navigation.navigate(result.data.page);
-      }
-      else{
-        this.state.filterResponse=result.data;
-        this.setState({loading1:false,loading:(this.state.loading1 || this.state.loading2)});
-      }
-    }).catch(error=>(error.request.status==401?
-      (AsyncStorage.removeItem('userToken'),Alert.alert(
-        'خطای اعتبارسنجی',
-        'لطفا دوباره وارد شوید',
-        [
-          {text: 'باشه', onPress: () => this.props.navigation.navigate('Hello')},
-        ],
-        {cancelable: false},
-      )):console.log('bye'))
-    );*/}
   }
 
   addToCart(id,added,purchased,key){
     if(!added && !purchased){
-    console.log(key);
     tmp=this.state.buttonLoad;
     tmp[key]=true;
     this.setState({buttonLoad:tmp});
-    const apiUri="https://clone.classino.com/api/cart/"+id+"/addToCart";
+    const apiUri="cart/"+id+"/addToCart";
+    this.props.getAddToCard()
+    {/*
     axios.get(apiUri,
         {headers:{Accept:'application/json',Authorization:this.props.token,Release:'3',OS:'android'}}
     ).then(result=>{
@@ -178,33 +124,38 @@ class Courses extends Component {
         {cancelable: false},
       )):console.log('bye'))
     );;
-  }
+  */}
+}
+
   }
   goToCourse(id,purchased,added){
     this.props.navigation.navigate("SingleCourse",{courseNo:id,purchased:purchased,added:added});
   }
+
   imageLoaded() {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
   }
+
   content(){
     return(
       <Container>
       <PickerBox
         ref={ref => this.myref1 = ref}
         data={ this.props.filterData.lessons }
-        onValueChange={(value) => (this.setState({selectedTextValue1:value}),this.getCourses1(value,this.props.filterData.lessons,1))}
+        onValueChange={(value) => (this.setState({selectedTextValue1:value}),this.setFilter(value,this.props.filterData.lessons,1))}
+        selectedValue={ this.state.selectedValues[0] }
       />
       <PickerBox
         ref={ref => this.myref2 = ref}
         data={ this.props.filterData.grades }
-        onValueChange={value => (this.setState({selectedTextValue2:value}),this.getCourses1(value,this.props.filterData.grades,2))}
-        selectedValue={ this.state.selectedValue2 }
+        onValueChange={value => (this.setState({selectedTextValue2:value}),this.setFilter(value,this.props.filterData.grades,2))}
+        selectedValue={ this.state.selectedValues[1] }
       />
       <PickerBox
         ref={ref => this.myref3 = ref}
         data={ this.props.filterData.courses }
-        onValueChange={value => (this.setState({selectedTextValue3:value}),this.getCourses1(value,this.props.filterData.courses,3))}
-        selectedValue={ this.state.selectedValue3 }
+        onValueChange={value => (this.setState({selectedTextValue3:value}),this.setFilter(value,this.props.filterData.courses,3))}
+        selectedValue={ this.state.selectedValues[2] }
       />
       <Content >
         <Image style={{top:0,width:DEVICE_WIDTH,height:DEVICE_HEIGHT,position:'absolute'}}   source={orangeRectangular} ref={img => {
@@ -235,18 +186,16 @@ class Courses extends Component {
           </TouchableOpacity>
           </View>
         </View>
-        <View style={{zIndex:1,marginTop:5}}>
+        <View style={{zIndex:1,marginTop:5,flex:1}}>
           <FlatList
             data={this.props.screenData.products_result}
             keyExtractor={(item, index) => item.key}
-            extraData={this.state.buyCount}
             removeClippedSubviews={true}
             shouldComponentUpdate={()=>
                {
                  return false
                }  }
             renderItem={({item})=>
-            <View style={{}}>
               <Card containerStyle={styles.containerStyle}>
                 <TouchableOpacity onPress={()=>this.goToCourse(item.id,item.user_has_purchased,item.added_to_cart)} style={{flexDirection:'row'}}>
                   <Image
@@ -265,17 +214,17 @@ class Courses extends Component {
                     </TouchableOpacity>
                    }
                 </TouchableOpacity>
-              </Card>
-            </View>}
+              </Card>}
           />
         </View>
       </Content>
       </Container>
     )
   }
+  
   render() {
     return (
-      <GlobalScreen navigation={this.props.navigation} state={{...this.state,loading:this.state.loading1 || this.state.loading2}} props={{fetching:!(this.props.screenData && this.props.filterData)}}  title='میز مطالعه' page={'2'}>
+      <GlobalScreen navigation={this.props.navigation} props={{fetching:!(this.props.screenData && this.props.filterData)}}  title='میز مطالعه' page={'2'}>
 
         {this.props.screenData && this.props.filterData ?this.content():null}
       </GlobalScreen>
@@ -369,14 +318,15 @@ const styles=StyleSheet.create({
 });
 function mapStateToProps(state) {
     const { data , fetching } = state.classino;
-    screenData=data[screenUrl];
-    filterData=data[filterUrl];
+    const screenData=data[screenUrl];
+    const filterData=data[filterUrl];
     return { screenData , filterData, fetching};
 }
 const mapDispatchToProps = (dispatch) => {
   return {
     getCourses : (screenUrl, data) => dispatch(ClassinoActions.postRequest(screenUrl, data)),
-    getFiletrs : ( filterUrl ) => dispatch(ClassinoActions.getRequest(filterUrl))
+    getFiletrs : ( filterUrl ) => dispatch(ClassinoActions.getRequest(filterUrl)),
+    getAddToCard : ( addToCartUrl ) => dispatch(ClassinoActions.getRequest(addToCartUrl)),
   }
 }
 

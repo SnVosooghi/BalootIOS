@@ -11,7 +11,7 @@ import { ClassinoTypes } from '../Redux/ClassinoRedux'
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
-import { getRequest, postRequest} from './ClassinoSagas'
+import { getRequest, postRequest , refreshPage} from './ClassinoSagas'
 
 /* ------------- API ------------- */
 
@@ -28,6 +28,7 @@ export default function * root () {
 
     // some sagas receive extra parameters in addition to an action
     takeLatest(ClassinoTypes.GET_REQUEST , getRequest , api),
-    takeLatest(ClassinoTypes.POST_REQUEST , postRequest , api)
+    takeLatest(ClassinoTypes.POST_REQUEST , postRequest , api),
+    takeLatest(ClassinoTypes.REFRESH_PAGE , refreshPage ),
   ])
 }
