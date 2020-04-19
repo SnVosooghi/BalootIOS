@@ -13,6 +13,7 @@ import update from 'react-addons-update';
 import GlobalScreen from './../../Components/GlobalScreen'
 import ClassinoActions from '../../Redux/ClassinoRedux'
 import BuyButton from './';
+import PickerBoxView from './CustomFilter.js';
 
 //assets
 const orangeRectangular = require('../../../assets/LoginBackground.png');
@@ -35,6 +36,7 @@ class Courses extends Component {
       selectedValues: ['', '', ''],
       buttonLoad:[],
     }
+    this.pickerRef = React.createRef();
     this.getCourses();
     this.getData();
   }
@@ -139,6 +141,7 @@ class Courses extends Component {
   content(){
     return(
       <Container>
+      <PickerBoxView ref={this.pickerRef} lessons={this.props.filterData.lessons} grades={this.props.filterData.grades} courses={this.props.filterData.courses}/>
       <PickerBox
         ref={ref => this.myref1 = ref}
         data={ this.props.filterData.lessons }
@@ -166,6 +169,7 @@ class Courses extends Component {
         blurType="xlight"
         blurAmount={50}
         />
+        {console.log(this.pickerRef.current.topFilterShow())}
         <View style={{marginTop:10,alignSelf:'center',zIndex:2,flexDirection:'row',width:.8*DEVICE_WIDTH}}>
           <View style={{flexDirection:'column',alignItems:'center'}}>
             <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref1.openPicker()}>
@@ -221,7 +225,7 @@ class Courses extends Component {
       </Container>
     )
   }
-  
+
   render() {
     return (
       <GlobalScreen navigation={this.props.navigation} props={{fetching:!(this.props.screenData && this.props.filterData)}}  title='میز مطالعه' page={'2'}>
