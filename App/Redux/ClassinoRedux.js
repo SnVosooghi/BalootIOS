@@ -5,7 +5,7 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   setToken: ['token'],
-  getRequest: ['getAddress'],
+  getRequest: ['address', 'data'],
   postRequest: ['postAddress' , 'data'],
   getSuccess: ['data'],
   getFailure: null,
@@ -20,7 +20,6 @@ export default Creators
 export const INITIAL_STATE = Immutable({
   fetching: true,
   error: null,
-  getAddress: null,
   data:{
       'desk/dashboard':null,
       'products/list':null,
@@ -28,6 +27,9 @@ export const INITIAL_STATE = Immutable({
   },
   dates:{},
   token:'',
+  postValues:{
+    'products/list':null
+  }
 })
 
 /* ------------- Selectors ------------- */
@@ -41,8 +43,8 @@ export const CLassinoSelectors = {
 // request the avatar for a user
 export const tokenSet = (state, token) =>
   state.merge({ token : 'Bearer '+token.token })
-export const requestGet = (state, { getAddress }) =>
-  state.merge({ fetching: true, error : null, getAddress  })
+export const requestGet = (state, address , data ) =>
+  state.merge({ fetching: true, error : null   })
 export const requestPost = ( state , postAddress , data) =>
   state.merge({ fetching: true, error : null, getAddress : postAddress  })
 // successful avatar lookup

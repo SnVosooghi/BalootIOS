@@ -13,7 +13,6 @@ import update from 'react-addons-update';
 import GlobalScreen from './../../Components/GlobalScreen'
 import ClassinoActions from '../../Redux/ClassinoRedux'
 import BuyButton from './';
-import PickerBoxView from './CustomFilter.js';
 
 //assets
 const orangeRectangular = require('../../../assets/LoginBackground.png');
@@ -36,7 +35,7 @@ class Courses extends Component {
       selectedValues: ['', '', ''],
       buttonLoad:[],
     }
-    this.pickerRef = React.createRef();
+    this.myRef=[null,null,null];
     this.getCourses();
     this.getData();
   }
@@ -106,28 +105,12 @@ class Courses extends Component {
 
   addToCart(id,added,purchased,key){
     if(!added && !purchased){
-    tmp=this.state.buttonLoad;
-    tmp[key]=true;
-    this.setState({buttonLoad:tmp});
-    const apiUri="cart/"+id+"/addToCart";
-    this.props.getAddToCard()
-    {/*
-    axios.get(apiUri,
-        {headers:{Accept:'application/json',Authorization:this.props.token,Release:'3',OS:'android'}}
-    ).then(result=>{
-      this.getCourses();
-    }).catch(error=>(error.request.status==401?
-      (AsyncStorage.removeItem('userToken'),Alert.alert(
-        'خطای اعتبارسنجی',
-        'لطفا دوباره وارد شوید',
-        [
-          {text: 'باشه', onPress: () => this.props.navigation.navigate('Hello')},
-        ],
-        {cancelable: false},
-      )):console.log('bye'))
-    );;
-  */}
-}
+      tmp=this.state.buttonLoad;
+      tmp[key]=true;
+      this.setState({buttonLoad:tmp});
+      const apiUri="cart/"+id+"/addToCart";
+      this.props.getAddToCard(apiUri);
+    }
 
   }
   goToCourse(id,purchased,added){
@@ -138,58 +121,72 @@ class Courses extends Component {
     this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
   }
 
+  pickerBox(index){
+    return(
+      <React.Fragment>
+        <PickerBox
+          ref={ref => this.myref1 = ref}
+          data={ this.props.filterData.lessons }
+          onValueChange={(value) => (this.setState({selectedTextValue1:value}),this.setFilter(value,this.props.filterData.lessons,1))}
+          selectedValue={ this.state.selectedValues[0] }
+        />
+        <PickerBox
+          ref={ref => this.myref2 = ref}
+          data={ this.props.filterData.grades }
+          onValueChange={value => (this.setState({selectedTextValue2:value}),this.setFilter(value,this.props.filterData.grades,2))}
+          selectedValue={ this.state.selectedValues[1] }
+        />
+        <PickerBox
+          ref={ref => this.myref3 = ref}
+          data={ this.props.filterData.courses }
+          onValueChange={value => (this.setState({selectedTextValue3:value}),this.setFilter(value,this.props.filterData.courses,3))}
+          selectedValue={ this.state.selectedValues[2] }
+        />
+      </React.Fragment>
+    )
+  }
+
+  filterTab(){
+    return(
+      <View style={{marginTop:10,alignSelf:'center',zIndex:2,flexDirection:'row',width:.8*DEVICE_WIDTH}}>
+        <View style={{flexDirection:'column',alignItems:'center'}}>
+          <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref1.openPicker()}>
+            <Text style={styles.searchFilter}>{this.state.selectedValue1==''?'انتخاب درس':this.state.selectedTextValue1}</Text>
+            <Icon containerStyle={{position:'absolute',right:0}} name='expand-more' color='#AAAAAA'/>
+          </TouchableOpacity>
+        </View>
+        <View style={{flexDirection:'column',alignItems:'center',paddingHorizontal:10}}>
+          <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref2.openPicker()}>
+            <Text style={styles.searchFilter}>{this.state.selectedValue2==''?'انتخاب پایه':this.state.selectedTextValue2}</Text>
+            <Icon containerStyle={{position:'absolute',right:0}} name='expand-more' color='#AAAAAA'/>
+          </TouchableOpacity>
+        </View>
+        <View style={{flexDirection:'column',alignItems:'center'}}>
+        <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref3.openPicker()}>
+          <Text style={styles.searchFilter}>{this.state.selectedValue3==''?'دوره ها':this.state.selectedTextValue3}</Text>
+          <Icon containerStyle={{position:'absolute',right:0}} name='expand-more' color='#AAAAAA'/>
+        </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
   content(){
     return(
       <Container>
-      <PickerBoxView ref={this.pickerRef} lessons={this.props.filterData.lessons} grades={this.props.filterData.grades} courses={this.props.filterData.courses}/>
-      <PickerBox
-        ref={ref => this.myref1 = ref}
-        data={ this.props.filterData.lessons }
-        onValueChange={(value) => (this.setState({selectedTextValue1:value}),this.setFilter(value,this.props.filterData.lessons,1))}
-        selectedValue={ this.state.selectedValues[0] }
-      />
-      <PickerBox
-        ref={ref => this.myref2 = ref}
-        data={ this.props.filterData.grades }
-        onValueChange={value => (this.setState({selectedTextValue2:value}),this.setFilter(value,this.props.filterData.grades,2))}
-        selectedValue={ this.state.selectedValues[1] }
-      />
-      <PickerBox
-        ref={ref => this.myref3 = ref}
-        data={ this.props.filterData.courses }
-        onValueChange={value => (this.setState({selectedTextValue3:value}),this.setFilter(value,this.props.filterData.courses,3))}
-        selectedValue={ this.state.selectedValues[2] }
-      />
+      {this.pickerBox()}
       <Content >
-        <Image style={{top:0,width:DEVICE_WIDTH,height:DEVICE_HEIGHT,position:'absolute'}}   source={orangeRectangular} ref={img => {
-          this.backgroundImage = img;
-        }}  onLoadEnd={this.imageLoaded.bind(this)} />
+        <Image
+          style={{top:0,width:DEVICE_WIDTH,height:DEVICE_HEIGHT,position:'absolute'}}
+          source={orangeRectangular}
+          ref={img => { this.backgroundImage = img }}
+          onLoadEnd={this.imageLoaded.bind(this)} />
         <BlurView
-        style={styles.absolute}
-        blurType="xlight"
-        blurAmount={50}
+          style={styles.absolute}
+          blurType="xlight"
+          blurAmount={50}
         />
-        {console.log(this.pickerRef.current.topFilterShow())}
-        <View style={{marginTop:10,alignSelf:'center',zIndex:2,flexDirection:'row',width:.8*DEVICE_WIDTH}}>
-          <View style={{flexDirection:'column',alignItems:'center'}}>
-            <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref1.openPicker()}>
-              <Text style={styles.searchFilter}>{this.state.selectedValue1==''?'انتخاب درس':this.state.selectedTextValue1}</Text>
-              <Icon containerStyle={{position:'absolute',right:0}} name='expand-more' color='#AAAAAA'/>
-            </TouchableOpacity>
-          </View>
-          <View style={{flexDirection:'column',alignItems:'center',paddingHorizontal:10}}>
-            <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref2.openPicker()}>
-              <Text style={styles.searchFilter}>{this.state.selectedValue2==''?'انتخاب پایه':this.state.selectedTextValue2}</Text>
-              <Icon containerStyle={{position:'absolute',right:0}} name='expand-more' color='#AAAAAA'/>
-            </TouchableOpacity>
-          </View>
-          <View style={{flexDirection:'column',alignItems:'center'}}>
-          <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref3.openPicker()}>
-            <Text style={styles.searchFilter}>{this.state.selectedValue3==''?'دوره ها':this.state.selectedTextValue3}</Text>
-            <Icon containerStyle={{position:'absolute',right:0}} name='expand-more' color='#AAAAAA'/>
-          </TouchableOpacity>
-          </View>
-        </View>
+        {this.filterTab()}
         <View style={{zIndex:1,marginTop:5,flex:1}}>
           <FlatList
             data={this.props.screenData.products_result}
@@ -328,7 +325,7 @@ function mapStateToProps(state) {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    getCourses : (screenUrl, data) => dispatch(ClassinoActions.postRequest(screenUrl, data)),
+    getCourses : (screenUrl, data) => dispatch(ClassinoActions.getRequest(screenUrl, data)),
     getFiletrs : ( filterUrl ) => dispatch(ClassinoActions.getRequest(filterUrl)),
     getAddToCard : ( addToCartUrl ) => dispatch(ClassinoActions.getRequest(addToCartUrl)),
   }

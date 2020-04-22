@@ -1,4 +1,8 @@
 export default{
   "desk/dashboard":[],
-  "products/listFilters":[]
+  "products/list":[],
+  "products/listFilters":[],
+  "cart/number/addToCart":[
+    "products/list"
+  ]
 }

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {View, StyleSheet, Dimensions, TouchableOpacity, Text} from 'react-native';
+import Icon from 'react-native-elements';
 import PickerBox from 'react-native-picker-box';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -24,24 +25,24 @@ export default class PickerBoxView extends Component{
     this.setState({filterValues:newFilterValues});
   };
   topFilterShow(){
-    console.log('here in topFilterShow!!!!!');
+    console.log(this.state.filterValues);
     return(
       <View style={{marginTop:10,alignSelf:'center',zIndex:2,flexDirection:'row',width:.8*DEVICE_WIDTH}}>
         <View style={{flexDirection:'column',alignItems:'center'}}>
           <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref1.openPicker()}>
-            <Text style={styles.searchFilter}>{this.state.filterVaules[0]==''?'انتخاب درس':this.state.filterVaules[0]}</Text>
+            <Text style={styles.searchFilter}>{this.state.filterValues[0]==''?'انتخاب درس':this.state.filterValues[0]}</Text>
             <Icon containerStyle={{position:'absolute',right:0}} name='expand-more' color='#AAAAAA'/>
           </TouchableOpacity>
         </View>
         <View style={{flexDirection:'column',alignItems:'center',paddingHorizontal:10}}>
           <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref2.openPicker()}>
-            <Text style={styles.searchFilter}>{this.state.filterVaules[1]==''?'انتخاب پایه':this.state.filterVaules[0]}</Text>
+            <Text style={styles.searchFilter}>{this.state.filterValues[1]==''?'انتخاب پایه':this.state.filterValues[0]}</Text>
             <Icon containerStyle={{position:'absolute',right:0}} name='expand-more' color='#AAAAAA'/>
           </TouchableOpacity>
         </View>
         <View style={{flexDirection:'column',alignItems:'center'}}>
         <TouchableOpacity style={styles.searchButton} onPress={()=>this.myref3.openPicker()}>
-          <Text style={styles.searchFilter}>{this.state.filterVaules[2]==''?'دوره ها':this.state.filterVaules[0]}</Text>
+          <Text style={styles.searchFilter}>{this.state.filterValues[2]==''?'دوره ها':this.state.filterValues[0]}</Text>
           <Icon containerStyle={{position:'absolute',right:0}} name='expand-more' color='#AAAAAA'/>
         </TouchableOpacity>
         </View>

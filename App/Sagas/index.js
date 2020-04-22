@@ -1,4 +1,4 @@
-import { takeLatest, all } from 'redux-saga/effects'
+import { takeLatest, all, takeEvery } from 'redux-saga/effects'
 import FixtureAPI from '../Services/FixtureApi'
 import ClassinoApi from '../Services/ClassinoApi'
 import DebugConfig from '../Config/DebugConfig'
@@ -27,7 +27,7 @@ export default function * root () {
     takeLatest(StartupTypes.STARTUP, startup),
 
     // some sagas receive extra parameters in addition to an action
-    takeLatest(ClassinoTypes.GET_REQUEST , getRequest , api),
+    takeEvery(ClassinoTypes.GET_REQUEST , getRequest , api),
     takeLatest(ClassinoTypes.POST_REQUEST , postRequest , api),
     takeLatest(ClassinoTypes.REFRESH_PAGE , refreshPage ),
   ])

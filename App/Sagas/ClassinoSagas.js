@@ -4,17 +4,27 @@ import { path } from 'ramda'
 import refreshList from '../assets/RefreshIndexes.js'
 
 export function * getRequest (api, action) {
-  const { getAddress } = action
-  const state = yield select();
+  let response=null;
+  let address=null;
+  //this is get request
+  if (!action.data){
+    address = action.address;
+    response = yield call(api.getRequest, address);
+  }
+  //or post reuqest
+  else {
+    address = action.address;
+    response = yield call(api.postRequest, address , action.data);
+  }
   // make the call to the api
 
-  const response = yield call(api.getRequest, getAddress)
 
   if (response.ok) {
-    const action = {data :response.data, getAddress : getAddress}
+    console.log("repsonse is ok!"+action);
+    const responseObject = {data :response.data, getAddress : address}
     // do data conversion here if needed
-    yield put(ClassinoActions.getSuccess( action ) )
-    yield put(ClassinoActions.refreshPage( getAddress) )
+    yield put(ClassinoActions.getSuccess( responseObject ) )
+    yield put(ClassinoActions.refreshPage( address) )
   } else {
     yield put(ClassinoActions.getFailure())
   }
@@ -32,10 +42,13 @@ export function * postRequest (api, action) {
     yield put(ClassinoActions.getFailure())
   }
 }
-
+//function which map requests to list which needs to be refreshed
 export function * refreshPage ( action ){
-  console.log(action.getAddress);
-  const pagesToBeRefreshed=refreshList[action.getAddress];
-  for (const pages of pagesToBeRefreshed)
-    yield put(ClassinoActions.getRequest(pages));
+  let parsed=action.getAddress.replace(/([0-9])\w+/g,'number')
+  console.log(parsed);
+  const pagesToBeRefreshed=refreshList[parsed];
+  for (const pages of pagesToBeRefreshed){
+    const postData = yield select(state=>state.postValues[pages])
+    yield put(ClassinoActions.getRequest(pages, postData));
+  }
 }
