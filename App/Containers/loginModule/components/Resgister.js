@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import Logo from './Logo';
 import RegisterForm from './RegisterForm';
 import bgSrc from '../images/Mywallpaper.png';
-import ButtonRegister from './ButtonRegister';
 
 export default class Resgister extends Component {
   constructor() {

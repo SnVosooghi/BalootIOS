@@ -7,8 +7,6 @@ import Logo from './Logo';
 import Form from './Form';
 import bgSrc from '../images/Mywallpaper.png';
 import ButtonSubmit from './ButtonSubmit';
-import GobackLogin from './GobackLogin';
-import SignupSection from './SignupSection';
 
 import orangeRectangular from '../../../../assets/LoginBackground.png';
 import whiteRectangular from '../../../../assets/LogoClassinoRangi.png';

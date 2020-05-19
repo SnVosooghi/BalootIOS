@@ -12,9 +12,7 @@ import {
 } from 'react-native';
 import { Input , ThemeProvider, Button , Divider, SocialIcon, CheckBox} from 'react-native-elements';
 
-import UserInput from './UserInput';
 import ButtonSubmit from './ButtonSubmit';
-import SignupSection from './SignupSection';
 
 import usernameImg from '../images/username.png';
 import passwordImg from '../images/password.png';

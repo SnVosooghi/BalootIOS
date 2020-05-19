@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ButtonSubmit from '../components/ButtonSubmit';
-import GobackLogin from '../components/GobackLogin';
+ 
 import {Image, Text, StyleSheet ,Dimensions,View, ImageBackground, KeyboardAvoidingView, AsyncStorage} from 'react-native';
 import {Input, Icon}from 'react-native-elements';
 const DEVICE_WIDTH = Dimensions.get('window').width;

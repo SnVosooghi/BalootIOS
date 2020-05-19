@@ -18,10 +18,8 @@ import {
 } from 'react-native';
 import {Spinner} from 'native-base';
 import { Input , ThemeProvider, Button , Divider, SocialIcon,Icon} from 'react-native-elements';
-import UserInput from './UserInput';
+import { query, mutation } from 'gql-query-builder'
 import ButtonSubmit from './ButtonSubmit';
-import GobackLogin from './GobackLogin';
-import SignupSection from './SignupSection';
 import { connect } from 'react-redux';
 import ClassinoActions from '../../../Redux/ClassinoRedux';
 import usernameImg from '../images/username.png';
@@ -32,6 +30,7 @@ import NetInfo from "@react-native-community/netinfo";
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 const MARGIN = 40;
+const routeApi='http://localhost:8000';
 class Form extends Component {
   constructor(props) {
     super(props);
@@ -57,7 +56,7 @@ class Form extends Component {
 
   onSubmit() {
     NetInfo.fetch().then(state => {
-      if(state.isInternetReachable){
+      if(state.isConnected){
         if (this.props.formtype=='signin'){
           if(this.state.mobile=='' || this.state.password==''){
             Alert.alert('لطفا شماره موبایل و رمز عبور را به درستی وارد کنید');
@@ -77,63 +76,47 @@ class Form extends Component {
       }
       else{
         Alert.alert('لطفا اتصال به اینترنت را بررسی فرمایید');
+        console.log(state);
       }
       });
       this.child.current.qw();
     }
     fetchToken(mobile,password) {
-            console.log('Hi '+mobile + ' '+password);
-            axios.post('https://clone.classino.com/api/login',
-            {
-              mobile:mobile,
-              password:password,
-            },
-              {
-                headers:
-                {
-                  Release:'2',
-                  OS:'android'
-                }
+            const userCredentials={
+              email:mobile,
+              password:password
+            }
+            axios.post(routeApi, query({
+              operation: 'userLogin',
+              variables: userCredentials,
+              fields: ['user {name, email, role}', 'token']
+            })).then(result=>{
+                  console.log(result.data);
+                  if(result.data.errors!=null){
+                    Alert.alert(result.data.errors[0].message);
+                  }
               })
-              .then(result=>{
-                  console.log('tokenGot!!');
-                  this.state.token=result.data.token;
-                  this.setValue(result.data.token);
-                  this.changed();
-              })
-              .catch((error) =>{
-                console.log(error)
-                if(error.response.status==401){
-                  Alert.alert(
-                    'خطای ورود',
-                    'لطفا شماره موبایل یا پسوورد خود را به درستی وارد کنید',
-                    [
-                      {text: 'باشه',onPress: () => this.resetButton()},
-                    ],
-                  );
-                }
-              });
         }
       resetButton(){
         console.log('reset');
         this.mobileRef.clear();
       }
       registerFetchToken(mobile,password) {
-              axios.post('https://clone.classino.com/api/register',{
-                  mobile:mobile,
-                  representer:password,
-                },{headers:{Release:'2',OS:Platform.OS}}
-              ).then(result=>{
-                this.state.token=result.data.token;
-                this.props.setToken(result.data.token);
-                this.props.navigation.navigate('Home');
+        const userDetails={
+          name: 'testName',
+          email : mobile,
+          password: password
+        }
+        axios.post(routeApi, mutation({
+          operation: 'userSignup',
+          variables: userDetails,
+          fields: ['id', 'name', 'email']
+        })).then(result=>{
+                console.log(result.data);
+                if(result.data.errors!=null){
+                  Alert.alert(result.data.errors[0].message);
+                }
               })
-              .catch(function (error) {
-                console.log(error.response.data.errors);
-                Alert.alert(error.response.data.errors.mobile[0]);
-              },
-              this.child.current.qw()
-              );
           }
 
       setValue  (token) {

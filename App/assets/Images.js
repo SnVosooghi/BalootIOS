@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 export default {
   AddCredit:{
         launchscreenBg : require("../../assets/xdV2/Rectangle-13.png"),

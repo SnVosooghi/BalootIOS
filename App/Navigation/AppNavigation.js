@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { createAppContainer } from 'react-navigation'
+import Player from '../Containers/Player'
 import HomeScreen from '../Containers/HomeScreen'
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -28,10 +29,12 @@ import styles from './Styles/NavigationStyles'
 const MainAppStack = createStackNavigator(
   {
     Home: { screen: Home,path:'Home' },
-    Courses : { screen : Courses }
+    Courses : { screen : Courses },
+    LaunchScreen: { screen : LaunchScreen },
+    Player : { screen : Player }
   },
   {
-    initialRouteName: "Home",
+    initialRouteName: "Player",
     headerMode: "none"
   }
 );
@@ -51,6 +54,7 @@ function MyDrawer() {
     contentComponent= {(props) => <SideBar {...props} />}
     >
       <Drawer.Screen name="Home" component={Home} />
+
     </Drawer.Navigator>
   );
 }
@@ -78,7 +82,7 @@ const AppNavigator = createStackNavigator(
     LoginNavigator :  LoginNavigator,
   },
   {
-    initialRouteName: "Hello",
+    initialRouteName: "LoginNavigator",
     headerMode: "none"
   }
 );
@@ -88,6 +92,7 @@ const AppNavigator = createStackNavigator(
 
 // Manifest of possible screens
 const PrimaryNav = createStackNavigator({
+  Player: { screen: Player },
   HomeScreen: { screen: HomeScreen },
   LaunchScreen: { screen: LaunchScreen },
   LoginScreen : { screen : LLoginScreen }

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ButtonSubmit from '../components/ButtonSubmit';
-import GobackLogin from '../components/GobackLogin';
+ 
 import {Image,Text,StyleSheet,Dimensions,View,ImageBackground,KeyboardAvoidingView} from 'react-native';
  import Orientation from 'react-native-orientation-locker';
 const DEVICE_WIDTH = Dimensions.get('window').width;

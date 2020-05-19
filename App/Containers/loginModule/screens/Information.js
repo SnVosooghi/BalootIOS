@@ -14,8 +14,7 @@ import {
 import {Spinner} from 'native-base';
 import { Input , ThemeProvider, Button , Divider, SocialIcon,Icon} from 'react-native-elements';
 import ButtonSubmit from '../components/ButtonSubmit';
-import GobackLogin from '../components/GobackLogin';
-import SignupSection from '../components/SignupSection';
+ 
 import { connect } from 'react-redux';
  import Orientation from 'react-native-orientation-locker';
 import { bindActionCreators } from 'redux';

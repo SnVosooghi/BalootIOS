@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ButtonSubmit from '../components/ButtonSubmit';
-import GobackLogin from '../components/GobackLogin';
+ 
 import {Image,Text,StyleSheet,Dimensions,View,ImageBackground,KeyboardAvoidingView} from 'react-native';
 import axios from 'axios';
 import { connect } from 'react-redux';

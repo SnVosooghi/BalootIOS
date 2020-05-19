@@ -6,7 +6,7 @@ import Logo from '../components/Logo';
 import Form from '../components/Form';
 import bgSrc from '../images/Mywallpaper.png';
 import ButtonSubmit from '../components/ButtonSubmit';
-import GobackLogin from '../components/GobackLogin';
+ 
 
 import { connect } from 'react-redux';
 import orangeRectangular from '../../../../assets/RectangleOrange1.png';
